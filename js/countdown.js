@@ -8,33 +8,24 @@ function getUnlockDate() {
   unlock.setMonth(5);
   unlock.setDate(25);
   unlock.setHours(0, 0, 0, 0);
-  if (unlock <= now) {
-    unlock.setFullYear(now.getFullYear());
-  } else {
-    unlock.setFullYear(now.getFullYear());
+  if (unlock < now) {
+    unlock.setFullYear(now.getFullYear() + 1);
   }
-  const candidate = new Date(unlock);
-  if (candidate < now) {
-    candidate.setFullYear(now.getFullYear() + 1);
-  }
-  return candidate;
+  return unlock;
 }
 
-function getAfterDate() {
-  const after = new Date(getUnlockDate());
-  after.setDate(26);
-  return after;
-}
+// ── TEMP OVERRIDES (remove after testing) ────────────────────────────────────
+
+// ─────────────────────────────────────────────────────────────────────────────
 
 function isUnlocked() {
-  const now = getPhilippineTime();
-  const phNow = new Date(now);
-  return phNow.getMonth() === 5 && phNow.getDate() >= 25;
+const now = getPhilippineTime();
+return now.getMonth() === 5 && now.getDate() >= 25;
 }
 
 function isAfterDay() {
-  const now = getPhilippineTime();
-  return now.getMonth() === 5 && now.getDate() >= 26;
+const now = getPhilippineTime();
+return now.getMonth() === 5 && now.getDate() >= 26;
 }
 
 function updateCountdown() {
@@ -42,25 +33,17 @@ function updateCountdown() {
   const unlock = getUnlockDate();
   const diff = unlock - now;
 
-  if (diff <= 0) {
-    revealSite();
-    return;
-  }
+  if (diff <= 0) { revealSite(); return; }
 
   const totalSeconds = Math.floor(diff / 1000);
-  const hours = Math.floor(totalSeconds / 3600);
-  const minutes = Math.floor((totalSeconds % 3600) / 60);
-  const seconds = totalSeconds % 60;
-
-  document.getElementById('cd-hours').textContent = String(hours).padStart(2, '0');
-  document.getElementById('cd-minutes').textContent = String(minutes).padStart(2, '0');
-  document.getElementById('cd-seconds').textContent = String(seconds).padStart(2, '0');
+  document.getElementById('cd-hours').textContent = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
+  document.getElementById('cd-minutes').textContent = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
+  document.getElementById('cd-seconds').textContent = String(totalSeconds % 60).padStart(2, '0');
 }
 
 function revealSite() {
   const lock = document.getElementById('lockscreen');
   const site = document.getElementById('site');
-
   lock.style.transition = 'opacity 1.2s ease';
   lock.style.opacity = '0';
   setTimeout(() => {
@@ -71,31 +54,66 @@ function revealSite() {
 }
 
 function onSiteRevealed() {
-  const music = document.getElementById('bg-music');
-  if (music.src && music.src !== window.location.href) {
-    music.volume = 0;
-    music.play().catch(() => {});
-    let vol = 0;
-    const fade = setInterval(() => {
-      vol = Math.min(vol + 0.02, 0.55);
-      music.volume = vol;
-      if (vol >= 0.55) clearInterval(fade);
-    }, 120);
-  }
-
+  setTimeout(() => { if (window.startMusic) window.startMusic(); }, 300);
   launchConfetti();
   startShootingStars();
+  initScrollReveal();
+  initTeaserCountdown();
 
   if (isAfterDay()) {
     setTimeout(() => {
       document.getElementById('after-message').classList.remove('hidden');
     }, 4000);
+  } else {
+    const afterPoll = setInterval(() => {
+      if (isAfterDay()) {
+        clearInterval(afterPoll);
+        document.getElementById('after-message').classList.remove('hidden');
+      }
+    }, 30000);
   }
-
-  initScrollReveal();
 }
 
-if (true) {
+function initTeaserCountdown() {
+  // Only show on June 25, hide on June 26+
+  if (isAfterDay()) return;
+
+  const section = document.getElementById('teaser-section');
+  if (section) section.classList.add('visible');
+
+  function getJune26() {
+    const now = getPhilippineTime();
+    const target = new Date(now);
+    target.setMonth(5);
+    target.setDate(26);
+    target.setHours(0, 0, 0, 0);
+    if (target <= now) target.setFullYear(now.getFullYear() + 1);
+    return target;
+  }
+
+  function tickTeaser() {
+    const now = getPhilippineTime();
+    const diff = getJune26() - now;
+
+    if (diff <= 0) {
+      // It's June 26 now — hide teaser, show after-message
+      if (section) section.classList.remove('visible');
+      document.getElementById('after-message').classList.remove('hidden');
+      return;
+    }
+
+    const totalSeconds = Math.floor(diff / 1000);
+    document.getElementById('tc-hours').textContent = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
+    document.getElementById('tc-minutes').textContent = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
+    document.getElementById('tc-seconds').textContent = String(totalSeconds % 60).padStart(2, '0');
+  }
+
+  tickTeaser();
+  setInterval(tickTeaser, 1000);
+}
+
+// ── Entry point ───────────────────────────────────────────────────────────────
+if (isUnlocked()) {
   const lock = document.getElementById('lockscreen');
   lock.style.display = 'none';
   document.getElementById('site').classList.remove('hidden');
@@ -105,6 +123,7 @@ if (true) {
   setInterval(updateCountdown, 1000);
 }
 
+// ── Effects ───────────────────────────────────────────────────────────────────
 function launchConfetti() {
   const zone = document.getElementById('confetti-zone');
   const colors = ['#c4b5fd', '#a855f7', '#f43f5e', '#fda4af', '#e9d5ff', '#7c3aed'];
@@ -142,10 +161,7 @@ function initScrollReveal() {
   const els = document.querySelectorAll('.scroll-reveal');
   const obs = new IntersectionObserver((entries) => {
     entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.classList.add('visible');
-        obs.unobserve(e.target);
-      }
+      if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
     });
   }, { threshold: 0.12 });
   els.forEach(el => obs.observe(el));
