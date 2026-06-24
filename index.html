@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Happy Birthday</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Space+Mono:ital@0;1&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+<canvas id="starfield"></canvas>
+
+<div id="lockscreen">
+  <div class="lock-inner">
+    <div class="lock-stars"></div>
+    <p class="lock-label">this opens when it's time ✦</p>
+    <div id="countdown-display">
+      <div class="cd-block"><span id="cd-hours">--</span><small>hours</small></div>
+      <div class="cd-sep">:</div>
+      <div class="cd-block"><span id="cd-minutes">--</span><small>minutes</small></div>
+      <div class="cd-sep">:</div>
+      <div class="cd-block"><span id="cd-seconds">--</span><small>seconds</small></div>
+    </div>
+    <p class="lock-sub">until something special ✦</p>
+  </div>
+</div>
+
+<div id="site" class="hidden">
+
+  <div id="audio-bar">
+    <button id="mute-btn" aria-label="Toggle music">♪</button>
+    <div id="lyric-line"></div>
+  </div>
+
+  <audio id="bg-music" loop>
+    <source src="assets/song.mp3" type="audio/mpeg" />
+  </audio>
+
+  <section id="hero">
+    <div class="nebula-bg"></div>
+    <div class="hero-inner">
+      <p class="hero-eyebrow">✦ para sa'yo ang laban na to ✦</p>
+      <h1 id="hero-name">Jorins</h1>
+      <p class="hero-sub">Happy Birthday!</p>
+      <div class="scroll-hint">scroll ↓</div>
+    </div>
+    <div id="confetti-zone"></div>
+  </section>
+
+  <section id="age-reveal">
+    <div class="age-inner">
+      <p class="section-eyebrow">today you are</p>
+      <div class="big-number" id="age-number">18</div>
+      <p class="age-caption">years of being absolutely everything</p>
+    </div>
+  </section>
+
+  <section id="message-section">
+    <div class="message-wrap">
+      <p class="section-eyebrow">para sayo to, jorins</p>
+      <div id="typewriter-box">
+        <p id="typewriter-text"></p>
+        <span class="tw-cursor">|</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="bulletin-section">
+    <div class="bulletin-wrap">
+      <p class="section-eyebrow">things i never said out loud</p>
+      <h2 class="section-title">unsaid.</h2>
+      <div id="bulletin-board">
+
+        <div class="note" data-color="purple-light" style="--r:-3deg; --tx:0px; --ty:0px">
+          <div class="note-pin"></div>
+          <div class="note-front">tap to read ✦</div>
+          <div class="note-back">Your eyes. Ewan ko ba bakit supern lovestruck ko lagi sa mga titig mo. Everytime you look at me in the eye di ko talaga kayang ibalik. Nakakahiya kasi — pero napapansin mo na rin siguro na di ako lagi makatingin sayo pag nag-uusap tayo. Your eyes shines bright like a dayamond. Wow.</div>
+        </div>
+
+        <div class="note" data-color="rose" style="--r:2deg; --tx:0px; --ty:0px">
+          <div class="note-pin"></div>
+          <div class="note-front">tap to read ✦</div>
+          <div class="note-back">Your lips. Kaya nag-y-yearn talaga ako sa mga halik mo — yipee, ang sarap sa feeling. Di ko maexplain basta. Hahahaha weirdo lang talaga ako.</div>
+        </div>
+
+        <div class="note" data-color="indigo" style="--r:-2deg; --tx:0px; --ty:0px">
+          <div class="note-pin"></div>
+          <div class="note-front">tap to read ✦</div>
+          <div class="note-back">Everytime we spend time together, winiwish ko sana mas mabagal yung oras. Kaso hindi — parang mas mabilis pa?! Pag di kita kasama, kay Rence da Capybara nalang ako lumalapit. Your gift to me afterall — nachecherish ko yan ng sobra. Katabi ko yan lagi bago matulog. Anak ko yan.</div>
+        </div>
+
+        <div class="note" data-color="mauve" style="--r:3.5deg; --tx:0px; --ty:0px">
+          <div class="note-pin"></div>
+          <div class="note-front">tap to read ✦</div>
+          <div class="note-back">Your cheeks — alam mo na 'to. My own squishy. And of course, that smile. Apkors. 🫶</div>
+        </div>
+
+        <div class="note" data-color="purple-deep" style="--r:-1.5deg; --tx:0px; --ty:0px">
+          <div class="note-pin"></div>
+          <div class="note-front">tap to read ✦</div>
+          <div class="note-back">Even though you're not showy, I appreciate that you try your best to show you care. Please know that I tried my best to say all this to you. I saw everything you did — I just never knew how to show that I noticed.</div>
+        </div>
+
+        <div class="note" data-color="blue-light" style="--r:1deg; --tx:0px; --ty:0px">
+          <div class="note-pin"></div>
+          <div class="note-front">tap to read ✦</div>
+          <div class="note-back">Naeenjoy ko lagi yung bonding natin — laro man, movies, kahit di halata. At lagi kitang inaaway in game. Cherished all of it. All of it.</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section id="gallery-section">
+    <div class="gallery-wrap">
+      <p class="section-eyebrow">wala to nilagay ko lang</p>
+      <h2 class="section-title">memories.</h2>
+      <div id="photo-gallery">
+        <div class="photo-slot">
+          <img src="assets/photo1.jpg" alt="" />
+        </div>
+        <div class="photo-slot">
+          <img src="assets/photo2.jpg" alt="" />
+        </div>
+        <div class="photo-slot">
+          <img src="assets/photo3.jpg" alt="" />
+        </div>
+        <div class="photo-slot">
+          <img src="assets/photo4.jpg" alt="" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="finale">
+    <div class="finale-inner">
+      <div class="finale-stars">✦ ✧ ✦ ✧ ✦</div>
+      <h2 class="finale-title">happy birthday.</h2>
+      <p class="finale-sub">sorry uli and i love you sm</p>
+      <div class="finale-heart">🤍</div>
+    </div>
+  </section>
+
+  <div id="after-message" class="hidden">
+    <div class="after-inner">
+      <button id="after-close">✕</button>
+      <div class="after-text">
+        <p>hi, you weren't probably expecting this pero kung oo, edi ok — well first of all, happy gurang day. wow 18 yern? HAHAHAHAHA. i just wanted to say na i hope you like this gift?? i shouldn't have disturbed your peace pero wala e, part of me still misses you kahit alam kong mali ko naman. to be honest, matagal ko na gusto sabihin yung message na yun, around late may pa ata. pero originally, i was planning to only make things up with you and not literally leave at all pero idk what's gotten into my mind when i finally decided on sending it to you na. my self sabotaging self literally changed the message to just end it because i realized na nasasaktan lang kita ng sobra. now if you're wondering why i always stay up late is because i've spent all those times trying to think about that very message, isesend ko ba? or di na? all those endless thoughts and i ended up just ending it. ang fucked up ko sobra lmao, i just left pero i keep on missing you. kinda wish i never did that pero i did. in a span of 30 seconds i let it all end, ganun lang kabilis nakakatangina. kaso wala na, there's nothing reverting it. it is what is, my decisions led to this. i'm really sorry kung eto pa yung bday gift na marereceive mo from me. i know you were expecting something better. happy birthday uli ^^)</p>
+        <br />
+        <p>as much as i want to come back and try again it probably wont matter to you anym. ang tanga ko. ily.</p>
+        <br />
+        <p class="after-note">i intentionally made this openable the day after ur bday para atleast di ganto bubungad sayo and di mo ko iisipin sa mismong araw mo talaga. baka masira pa araw mo e</p>
+        <br />
+        <p class="after-bold">AND FOR THE LAST TIME HAPPY BIRTHDAY ULI SANA NAENJOY MO ARAW MO</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="shooting-stars-container"></div>
+
+</div>
+
+<script src="js/stars.js"></script>
+<script src="js/countdown.js"></script>
+<script src="js/main.js"></script>
+<script src="js/typewriter.js"></script>
+<script src="js/notes.js"></script>
+<script src="js/lyrics.js"></script>
+</body>
+</html>
